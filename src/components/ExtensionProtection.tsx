@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { ExtensionGuard } from '../utils/extensionGuard';
+import { ExtensionGuard } from '@/utils/extensionGuard';
 
 export default function ExtensionProtection() {
   useEffect(() => {

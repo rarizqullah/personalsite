@@ -1,6 +1,7 @@
-import HeroWrapper from './components/HeroWrapper';
-import TechStackItem from './components/TechStackItem';
+import HeroWrapper from '@/components/HeroWrapper';
+import TechStackItem from '@/components/TechStackItem';
 import Footer from '@/components/Footer';
+import Sentinel from '@/components/Sentinel';
 
 // Force static generation for optimal performance
 export const dynamic = 'force-static';
@@ -23,7 +24,7 @@ const techStack = [
 export default function Home() {
   return (
     <HeroWrapper>
-      <main className="hero">
+      <main className="hero min-h-screen bg-[var(--bg)] text-[var(--text)]">
         <div data-anim="title" className="group">
           <h1 className="hero-title flex items-center gap-2">
             Hello everyone <span className="hand-wave" aria-hidden="true">👋</span> my name is Rafi Risqullah Putra
@@ -61,6 +62,7 @@ export default function Home() {
           ))}
         </ul>
         
+        <Sentinel context="home" />
         <Footer />
       </main>
     </HeroWrapper>

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Cormorant } from "next/font/google";
 import "./globals.css";
-import { ExtensionErrorBoundary } from './components/ExtensionErrorBoundary';
-import ExtensionProtection from './components/ExtensionProtection';
+import ExtensionErrorBoundary from '@/components/ExtensionErrorBoundary';
+import ExtensionProtection from '@/components/ExtensionProtection';
+import ThemeProvider from '@/components/ThemeProvider';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const cormorant = Cormorant({
   subsets: ['latin'],
@@ -26,15 +28,40 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
+    <html lang="id" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('theme');
+                  var theme = 'light';
+                  if (stored && (stored === 'dark' || stored === 'light')) {
+                    theme = stored;
+                  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    theme = 'dark';
+                  }
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (e) {
+                  // Ignore errors
+                }
+              })();
+            `,
+          }}
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
-      <body className={cormorant.className}>
+      <body className={`${cormorant.className} bg-[var(--bg)] text-[var(--text)]`}>
+        <ThemeToggle />
         <ExtensionProtection />
         <ExtensionErrorBoundary>
-          {children}
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
         </ExtensionErrorBoundary>
       </body>
     </html>

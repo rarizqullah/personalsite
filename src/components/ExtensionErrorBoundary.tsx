@@ -12,7 +12,7 @@ interface State {
   error?: Error;
 }
 
-export class ExtensionErrorBoundary extends Component<Props, State> {
+class ExtensionErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { hasError: false };
@@ -72,3 +72,5 @@ export class ExtensionErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
+
+export default ExtensionErrorBoundary;

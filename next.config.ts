@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: "./",
   },
+  // Configure external image domains
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+    ],
+  },
   // Add headers to prevent extension interference
   async headers() {
     return [
