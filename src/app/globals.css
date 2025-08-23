@@ -2,14 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import custom CSS files */
+@import url('../styles/habits.css');
+
 /* CSS Variables untuk Dark Mode */
 :root {
   --bg: #FAF7F2;
   --surface: #FFFFFF;
   --text: #0B0F19;
   --muted: #64748B;
-  --brand: #0F766E;
-  --accent: #D4B483;
+  --brand: #39363683;
+  --accent: #e6e4e2;
   --border: #E5E7EB;
 }
 
@@ -18,8 +21,8 @@
   --surface: #0F172A;
   --text: #E5E7EB;
   --muted: #94A3B8;
-  --brand: #0F766E;
-  --accent: #D4B483;
+  --brand: #0f766d39;
+  --accent: #d4b48351;
   --border: #1F2937;
 }
 
@@ -42,8 +45,10 @@ html, body {
 body {
   color: var(--text);
   background: var(--bg);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
+  font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 /* Hide scrollbars for filmstrip */

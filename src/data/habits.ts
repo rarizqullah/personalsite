@@ -9,11 +9,21 @@ export type ArtItem = {
 
 export type JournalEntry = {
   id: string;
-  date: string;          // ISO
   title: string;
-  excerpt: string;
+  content: string;
   tags: string[];
+  createdAt: string;
+  updatedAt: string;
+  codeBlocks?: CodeBlock[];
+  readingTime?: number;
+  isBookmarked?: boolean;
 };
+
+interface CodeBlock {
+  language: string;
+  code: string;
+  title?: string;
+}
 
 export const ART_ITEMS: ArtItem[] = [
   {
@@ -85,23 +95,104 @@ export const ART_ITEMS: ArtItem[] = [
 export const JOURNALS: JournalEntry[] = [
   {
     id: "jr-001",
-    date: "2025-02-11",
-    title: "Getting comfortable with constraints",
-    excerpt: "Fokus pada batasan waktu 30 menit ternyata mendorong keputusan komposisi yang lebih berani.",
-    tags: ["process", "habit"]
+    createdAt: "2025-01-14T10:00:00.000Z",
+    updatedAt: "2025-01-14T10:00:00.000Z",
+    title: "API Integration with Fetch",
+    content: "Implementing proper error handling and loading states when fetching data from REST APIs. Important to handle edge cases like network failures, timeout errors, and malformed responses. Always wrap API calls in try-catch blocks and provide meaningful user feedback. Learned about async/await patterns and how to structure API service layers for maintainable code.",
+    tags: ["API", "JavaScript", "Error Handling"],
+    isBookmarked: true,
+    codeBlocks: [
+      {
+        language: "javascript",
+        code: `async function fetchUserData(userId) {
+  try {
+    const response = await fetch(\`/api/users/\${userId}\`);
+    if (!response.ok) {
+      throw new Error(\`HTTP error! status: \${response.status}\`);
+    }
+    const data = await response.json();
+    return { data, error: null };
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return { data: null, error: error.message };
+  }
+}`,
+        title: "API Error Handling Pattern"
+      }
+    ]
   },
   {
-    id: "jr-002",
-    date: "2025-04-08",
-    title: "Ink lines & breathing",
-    excerpt: "Tarikan garis mengikuti ritme napas menghasilkan tekstur yang lebih hidup.",
-    tags: ["ink", "mindfulness"]
+    id: "jr-002", 
+    createdAt: "2025-01-12T14:30:00.000Z",
+    updatedAt: "2025-01-12T14:30:00.000Z",
+    title: "CSS Grid Layout Mastery",
+    content: "Creating responsive layouts with CSS Grid. The power of grid-template-areas makes complex layouts much more readable and maintainable. Grid is perfect for 2D layouts while Flexbox excels at 1D arrangements. Understanding the difference between implicit and explicit grids was a game-changer for complex responsive designs.",
+    tags: ["CSS", "Grid", "Responsive Design"],
+    isBookmarked: false,
+    codeBlocks: [
+      {
+        language: "css",
+        code: `.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  grid-template-areas: 
+    "header header header"
+    "sidebar main aside"
+    "footer footer footer";
+}
+
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-areas: 
+      "header"
+      "main"
+      "sidebar" 
+      "aside"
+      "footer";
+  }
+}`,
+        title: "Responsive Grid Layout"
+      }
+    ]
   },
   {
     id: "jr-003",
-    date: "2025-07-02",
-    title: "Color notes: muted emerald",
-    excerpt: "Palet emerald lembut + ivory untuk nuansa editorial premium.",
-    tags: ["color", "study"]
+    createdAt: "2025-01-10T16:45:00.000Z", 
+    updatedAt: "2025-01-10T16:45:00.000Z",
+    title: "Building My First React Hook",
+    content: "Learning about custom hooks and state management in React. Discovered how to create reusable logic with useState and useEffect. The key insight was understanding the rules of hooks and how they enable component reuse. Custom hooks allow us to extract component logic into reusable functions, making our code more modular and testable.",
+    tags: ["React", "Hooks", "JavaScript"],
+    isBookmarked: true,
+    codeBlocks: [
+      {
+        language: "javascript",
+        code: `import { useState, useEffect } from 'react';
+
+function useLocalStorage(key, initialValue) {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.error('Error reading from localStorage:', error);
+      return initialValue;
+    }
+  });
+
+  const setValue = (value) => {
+    try {
+      setStoredValue(value);
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.error('Error writing to localStorage:', error);
+    }
+  };
+
+  return [storedValue, setValue];
+}`,
+        title: "Custom useLocalStorage Hook"
+      }
+    ]
   }
 ];
