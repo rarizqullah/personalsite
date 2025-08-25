@@ -65,6 +65,10 @@ export class ExtensionGuard {
         'binanceinjectedprovider',
         'metamask',
         'ethereum provider',
+        'cannot read properties of null',
+        'cannot read property',
+        'reading \'type\'',
+        'binance',
       ].some(pattern => errorString.includes(pattern));
       
       if (!isExtensionError) {
@@ -79,12 +83,16 @@ export class ExtensionGuard {
         event.filename.includes('moz-extension://') ||
         event.filename.includes('safari-extension://') ||
         event.message?.toLowerCase().includes('binance') ||
-        event.message?.toLowerCase().includes('metamask')
+        event.message?.toLowerCase().includes('metamask') ||
+        event.message?.toLowerCase().includes('cannot read properties of null') ||
+        event.message?.toLowerCase().includes('reading \'type\'') ||
+        event.message?.toLowerCase().includes('binanceinjectedprovider')
       );
       
       if (isExtensionError) {
         event.preventDefault();
         event.stopPropagation();
+        event.stopImmediatePropagation();
         console.debug('Extension error prevented:', event.message);
         return false;
       }

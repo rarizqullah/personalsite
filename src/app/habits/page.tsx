@@ -4,18 +4,13 @@ import { useState, useEffect, useMemo } from 'react';
 import HeroWrapper from '@/components/HeroWrapper';
 import Footer from '@/components/Footer';
 import Sentinel from '@/components/Sentinel';
-import JournalCard, { JournalEntry } from '@/components/habits/journal-card-new';
+import JournalCard from '@/components/habits/journal-card-new';
+import { JournalEntry } from '@/types/journal';
 import SearchFilterBar, { SearchFilters } from '@/components/habits/search-filter-bar';
 import LoadingSkeleton from '@/components/habits/loading-skeleton';
 import JournalForm from '@/components/habits/journal-form';
 import LearningProgress from '@/components/habits/learning-progress';
 import { JOURNALS } from '@/data/habits';
-
-interface CodeBlock {
-  language: string;
-  code: string;
-  title?: string;
-}
 
 // Force static generation for optimal performance
 export const dynamic = 'force-static';
@@ -39,28 +34,28 @@ export default function HabitsPage() {
       const savedEntries = localStorage.getItem('habits-journal-entries');
       if (savedEntries) {
         const parsedEntries = JSON.parse(savedEntries);
-        // Add reading time and bookmark status if missing
-        const entriesWithMetadata = parsedEntries.map((entry: JournalEntry) => ({
-          ...entry,
-          readingTime: entry.readingTime || calculateReadingTime(entry.content),
-          isBookmarked: entry.isBookmarked || false,
-          codeBlocks: entry.codeBlocks || []
-        }));
+        // Migrate old format to new format if necessary
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const entriesWithMetadata = parsedEntries.map((entry: any) => {
+          if (entry.content && !entry.blocks) {
+            // Convert old format to new format
+            return {
+              ...entry,
+              blocks: [{ type: 'paragraph', content: entry.content }],
+              readingTime: entry.readingTime || calculateReadingTime([{ type: 'paragraph', content: entry.content }]),
+              isBookmarked: entry.isBookmarked || false
+            };
+          }
+          return {
+            ...entry,
+            readingTime: entry.readingTime || calculateReadingTime(entry.blocks || []),
+            isBookmarked: entry.isBookmarked || false
+          };
+        });
         setEntries(entriesWithMetadata);
       } else {
-        // Use JOURNALS data directly with proper mapping
-        const demoEntries: JournalEntry[] = JOURNALS.map(journal => ({
-          id: journal.id,
-          title: journal.title,
-          content: journal.content,
-          tags: journal.tags,
-          createdAt: journal.createdAt,
-          updatedAt: journal.updatedAt,
-          readingTime: journal.readingTime || calculateReadingTime(journal.content),
-          isBookmarked: journal.isBookmarked || false,
-          codeBlocks: journal.codeBlocks || []
-        }));
-        setEntries(demoEntries);
+        // Use JOURNALS data directly (already in new format)
+        setEntries(JOURNALS);
       }
       setIsLoading(false);
     }, 800); // Simulate loading time
@@ -75,10 +70,19 @@ export default function HabitsPage() {
     }
   }, [entries, isLoading]);
 
-  const calculateReadingTime = (content: string): number => {
+  const calculateReadingTime = (blocks: { type: string; content: string }[]): number => {
+    if (!blocks || blocks.length === 0) return 1;
+    
+    const totalWords = blocks.reduce((acc, block) => {
+      if (block.type === 'paragraph') {
+        const words = block.content.trim().split(/\s+/).filter(word => word.length > 0);
+        return acc + words.length;
+      }
+      return acc;
+    }, 0);
+    
     const wordsPerMinute = 200;
-    const words = content.trim().split(/\s+/).length;
-    return Math.ceil(words / wordsPerMinute);
+    return Math.max(1, Math.ceil(totalWords / wordsPerMinute));
   };
 
   const calculateStats = (entries: JournalEntry[]) => {
@@ -106,11 +110,14 @@ export default function HabitsPage() {
     const filtered = entries.filter(entry => {
       const matchesQuery = !filters.query || 
         entry.title.toLowerCase().includes(filters.query.toLowerCase()) ||
-        entry.content.toLowerCase().includes(filters.query.toLowerCase()) ||
-        entry.tags.some(tag => tag.toLowerCase().includes(filters.query.toLowerCase()));
+        entry.blocks.some(block => 
+          block.type === 'paragraph' && 
+          block.content.toLowerCase().includes(filters.query.toLowerCase())
+        ) ||
+        (entry.tags || []).some(tag => tag.toLowerCase().includes(filters.query.toLowerCase()));
       
       const matchesTags = filters.tags.length === 0 || 
-        filters.tags.some(filterTag => entry.tags.includes(filterTag));
+        filters.tags.some(filterTag => (entry.tags || []).includes(filterTag));
       
       return matchesQuery && matchesTags;
     });
@@ -142,49 +149,31 @@ export default function HabitsPage() {
   const availableTags = useMemo(() => {
     const tagSet = new Set<string>();
     entries.forEach(entry => {
-      entry.tags.forEach(tag => tagSet.add(tag));
+      (entry.tags || []).forEach(tag => tagSet.add(tag));
     });
     return Array.from(tagSet).sort();
   }, [entries]);
 
-  const handleSaveEntry = (entryData: {
-    title: string;
-    content: string;
-    tags: string[];
-    codeBlocks: CodeBlock[];
-  }) => {
-    const now = new Date().toISOString();
-
+  const handleSaveEntry = (entry: JournalEntry) => {
     if (editingEntry) {
-      setEntries(prev => prev.map(entry => 
-        entry.id === editingEntry.id 
-          ? { 
-              ...entry, 
-              ...entryData,
-              readingTime: calculateReadingTime(entryData.content),
-              updatedAt: now 
-            }
-          : entry
+      // Update existing entry
+      setEntries(prev => prev.map(e => 
+        e.id === editingEntry.id ? entry : e
       ));
       setEditingEntry(null);
     } else {
-      const newEntry: JournalEntry = {
-        id: Date.now().toString(),
-        ...entryData,
-        createdAt: now,
-        updatedAt: now,
-        readingTime: calculateReadingTime(entryData.content),
-        isBookmarked: false
-      };
-      setEntries(prev => [newEntry, ...prev]);
+      // Add new entry
+      setEntries(prev => [entry, ...prev]);
     }
-
     setShowForm(false);
   };
 
-  const handleEditEntry = (entry: JournalEntry) => {
-    setEditingEntry(entry);
-    setShowForm(true);
+  const handleEditEntry = (id: string) => {
+    const entry = entries.find(e => e.id === id);
+    if (entry) {
+      setEditingEntry(entry);
+      setShowForm(true);
+    }
   };
 
   const handleDeleteEntry = (id: string) => {
@@ -268,6 +257,8 @@ export default function HabitsPage() {
                   <JournalCard
                     key={entry.id}
                     entry={entry}
+                    canEdit={true}
+                    canDelete={true}
                     onEdit={handleEditEntry}
                     onDelete={handleDeleteEntry}
                     onBookmark={handleBookmarkEntry}
@@ -324,15 +315,16 @@ export default function HabitsPage() {
         </section>
 
         {/* Journal Form Modal */}
-        <JournalForm
-          isOpen={showForm}
-          onClose={() => {
-            setShowForm(false);
-            setEditingEntry(null);
-          }}
-          onSave={handleSaveEntry}
-          editingEntry={editingEntry}
-        />
+        {showForm && (
+          <JournalForm
+            onSubmit={handleSaveEntry}
+            onCancel={() => {
+              setShowForm(false);
+              setEditingEntry(null);
+            }}
+            initialEntry={editingEntry || undefined}
+          />
+        )}
         
         <Sentinel context="habits" />
         <Footer />

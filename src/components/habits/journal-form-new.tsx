@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { JournalEntry, JournalBlock } from '@/types/journal'
 import { createParagraphBlock } from '@/utils/blockUtils'
 import BlockEditor from './BlockEditor'
@@ -18,17 +18,6 @@ export default function JournalForm({ onSubmit, onCancel, initialEntry }: Journa
       createParagraphBlock('')
     ]
   )
-
-  // Update form state when initialEntry changes
-  useEffect(() => {
-    if (initialEntry) {
-      setTitle(initialEntry.title)
-      setBlocks(initialEntry.blocks)
-    } else {
-      setTitle('')
-      setBlocks([createParagraphBlock('')])
-    }
-  }, [initialEntry])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

@@ -5,6 +5,7 @@ import ExtensionErrorBoundary from '@/components/ExtensionErrorBoundary';
 import ExtensionProtection from '@/components/ExtensionProtection';
 import ThemeProvider from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
+import '@/utils/binanceExtensionFix'; // Import Binance extension fix
 
 const cormorant = Cormorant({
   subsets: ['latin'],
@@ -30,11 +31,28 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta httpEquiv="Content-Security-Policy" 
+              content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://fonts.gstatic.com; object-src 'none'; base-uri 'self';" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
+                  // Early extension error prevention
+                  if (typeof window !== 'undefined') {
+                    window.addEventListener('error', function(event) {
+                      if (event.filename && event.filename.includes('chrome-extension://') && 
+                          (event.message.includes('Cannot read properties of null') || 
+                           event.message.includes('reading \\'type\\'') ||
+                           event.message.includes('binance'))) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        return false;
+                      }
+                    }, true);
+                  }
+                  
                   var stored = localStorage.getItem('theme');
                   var theme = 'light';
                   if (stored && (stored === 'dark' || stored === 'light')) {

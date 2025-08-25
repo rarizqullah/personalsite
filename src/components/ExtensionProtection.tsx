@@ -25,7 +25,11 @@ export default function ExtensionProtection() {
             )) ||
             (typeof message === 'string' && (
               message.toLowerCase().includes('binance') ||
-              message.toLowerCase().includes('cannot read properties of null')
+              message.toLowerCase().includes('cannot read properties of null') ||
+              message.toLowerCase().includes('reading \'type\'') ||
+              message.toLowerCase().includes('binanceinjectedprovider') ||
+              message.toLowerCase().includes('metamask') ||
+              message.toLowerCase().includes('ethereum')
             ));
           
           if (isExtensionError) {
@@ -39,6 +43,29 @@ export default function ExtensionProtection() {
           }
           return false;
         };
+        
+        // Handle unhandled promise rejections from extensions
+        window.addEventListener('unhandledrejection', (event) => {
+          const errorString = String(event.reason).toLowerCase();
+          const isExtensionError = [
+            'chrome-extension',
+            'moz-extension', 
+            'safari-extension',
+            'binance',
+            'metamask',
+            'ethereum',
+            'injected provider',
+            'cannot read properties of null',
+            'reading \'type\'',
+            'binanceinjectedprovider',
+          ].some(pattern => errorString.includes(pattern));
+          
+          if (isExtensionError) {
+            event.preventDefault();
+            console.debug('Extension promise rejection prevented:', event.reason);
+          }
+        });
+        
       } catch (error) {
         console.debug('Extension protection initialization error:', error);
       }

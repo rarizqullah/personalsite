@@ -24,7 +24,10 @@ class ExtensionErrorBoundary extends Component<Props, State> {
                             error.stack?.includes('moz-extension://') ||
                             error.message?.toLowerCase().includes('binance') ||
                             error.message?.toLowerCase().includes('ethereum') ||
-                            error.message?.toLowerCase().includes('metamask');
+                            error.message?.toLowerCase().includes('metamask') ||
+                            error.message?.toLowerCase().includes('cannot read properties of null') ||
+                            error.message?.toLowerCase().includes('reading \'type\'') ||
+                            error.message?.toLowerCase().includes('binanceinjectedprovider');
 
     if (isExtensionError) {
       console.debug('Extension error caught by boundary:', error.message);
@@ -42,7 +45,10 @@ class ExtensionErrorBoundary extends Component<Props, State> {
                             error.stack?.includes('moz-extension://') ||
                             error.message?.toLowerCase().includes('binance') ||
                             error.message?.toLowerCase().includes('ethereum') ||
-                            error.message?.toLowerCase().includes('metamask');
+                            error.message?.toLowerCase().includes('metamask') ||
+                            error.message?.toLowerCase().includes('cannot read properties of null') ||
+                            error.message?.toLowerCase().includes('reading \'type\'') ||
+                            error.message?.toLowerCase().includes('binanceinjectedprovider');
 
     if (isExtensionError) {
       console.debug('Extension error details:', {
