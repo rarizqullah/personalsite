@@ -7,7 +7,6 @@ import Sentinel from '@/components/Sentinel';
 import JournalCard from '@/components/habits/journal-card-new';
 import { JournalEntry } from '@/types/journal';
 import SearchFilterBar, { SearchFilters } from '@/components/habits/search-filter-bar';
-import LoadingSkeleton from '@/components/habits/loading-skeleton';
 import JournalForm from '@/components/habits/journal-form';
 import LearningProgress from '@/components/habits/learning-progress';
 import { JOURNALS } from '@/data/habits';
@@ -17,7 +16,6 @@ export const dynamic = 'force-static';
 
 export default function HabitsPage() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
   const [filters, setFilters] = useState<SearchFilters>({
@@ -29,46 +27,56 @@ export default function HabitsPage() {
 
   // Load entries from localStorage on component mount
   useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      const savedEntries = localStorage.getItem('habits-journal-entries');
-      if (savedEntries) {
-        const parsedEntries = JSON.parse(savedEntries);
-        // Migrate old format to new format if necessary
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const entriesWithMetadata = parsedEntries.map((entry: any) => {
-          if (entry.content && !entry.blocks) {
-            // Convert old format to new format
+    const loadEntries = () => {
+      try {
+        const savedEntries = localStorage.getItem('habits-journal-entries');
+        if (savedEntries) {
+          const parsedEntries = JSON.parse(savedEntries);
+          // Migrate old format to new format if necessary
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const entriesWithMetadata = parsedEntries.map((entry: any) => {
+            if (entry.content && !entry.blocks) {
+              // Convert old format to new format
+              return {
+                ...entry,
+                blocks: [{ type: 'paragraph', content: entry.content }],
+                readingTime: entry.readingTime || calculateReadingTime([{ type: 'paragraph', content: entry.content }]),
+                isBookmarked: entry.isBookmarked || false
+              };
+            }
             return {
               ...entry,
-              blocks: [{ type: 'paragraph', content: entry.content }],
-              readingTime: entry.readingTime || calculateReadingTime([{ type: 'paragraph', content: entry.content }]),
+              readingTime: entry.readingTime || calculateReadingTime(entry.blocks || []),
               isBookmarked: entry.isBookmarked || false
             };
-          }
-          return {
-            ...entry,
-            readingTime: entry.readingTime || calculateReadingTime(entry.blocks || []),
-            isBookmarked: entry.isBookmarked || false
-          };
-        });
-        setEntries(entriesWithMetadata);
-      } else {
-        // Use JOURNALS data directly (already in new format)
+          });
+          setEntries(entriesWithMetadata);
+        } else {
+          // Use JOURNALS data directly (already in new format)
+          setEntries(JOURNALS);
+        }
+      } catch (error) {
+        console.error('Error loading entries:', error);
+        // Fallback to JOURNALS data if localStorage fails
         setEntries(JOURNALS);
       }
-      setIsLoading(false);
-    }, 800); // Simulate loading time
-    
-    return () => clearTimeout(timer);
+    };
+
+    // Load immediately without delay using requestIdleCallback for better performance
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      requestIdleCallback(loadEntries);
+    } else {
+      // Fallback for browsers that don't support requestIdleCallback
+      setTimeout(loadEntries, 0);
+    }
   }, []);
 
   // Save entries to localStorage whenever entries change
   useEffect(() => {
-    if (entries.length > 0 && !isLoading) {
+    if (entries.length > 0) {
       localStorage.setItem('habits-journal-entries', JSON.stringify(entries));
     }
-  }, [entries, isLoading]);
+  }, [entries]);
 
   const calculateReadingTime = (blocks: { type: string; content: string }[]): number => {
     if (!blocks || blocks.length === 0) return 1;
@@ -209,13 +217,12 @@ export default function HabitsPage() {
         <div className="habits-hero-section">
           <div className="habits-hero-content">
             <h1 className="habits-hero-title">
-              <span className="habits-title-main">Habits</span>
               <button 
                 onClick={handleNewEntry}
                 className="habits-title-button"
                 aria-label="Create new entry"
               >
-                Journal
+                Journaling
               </button>
             </h1>
             <p className="habits-hero-subtitle">
@@ -229,47 +236,38 @@ export default function HabitsPage() {
           <div className="max-w-[800px] mx-auto px-8">
             
             {/* Learning Progress */}
-            {!isLoading && (
-              <LearningProgress
-                totalEntries={stats.total}
-                entriesThisWeek={stats.thisWeek}
-                entriesThisMonth={stats.thisMonth}
-              />
-            )}
+            <LearningProgress
+              totalEntries={stats.total}
+              entriesThisWeek={stats.thisWeek}
+              entriesThisMonth={stats.thisMonth}
+            />
             
             {/* Search & Filter Bar */}
-            {!isLoading && (
-              <SearchFilterBar
-                filters={filters}
-                onFiltersChange={setFilters}
-                availableTags={availableTags}
-                totalResults={filteredEntries.length}
-              />
-            )}
-
-            {/* Loading State */}
-            {isLoading && <LoadingSkeleton count={6} />}
+            <SearchFilterBar
+              filters={filters}
+              onFiltersChange={setFilters}
+              availableTags={availableTags}
+              totalResults={filteredEntries.length}
+            />
 
             {/* Journal Cards Grid */}
-            {!isLoading && (
-              <div className="journal-cards-grid">
-                {filteredEntries.map((entry, index) => (
-                  <JournalCard
-                    key={entry.id}
-                    entry={entry}
-                    canEdit={true}
-                    canDelete={true}
-                    onEdit={handleEditEntry}
-                    onDelete={handleDeleteEntry}
-                    onBookmark={handleBookmarkEntry}
-                    index={index}
-                  />
-                ))}
-              </div>
-            )}
+            <div className="journal-cards-grid">
+              {filteredEntries.map((entry, index) => (
+                <JournalCard
+                  key={entry.id}
+                  entry={entry}
+                  canEdit={true}
+                  canDelete={true}
+                  onEdit={handleEditEntry}
+                  onDelete={handleDeleteEntry}
+                  onBookmark={handleBookmarkEntry}
+                  index={index}
+                />
+              ))}
+            </div>
 
             {/* Empty State */}
-            {!isLoading && filteredEntries.length === 0 && entries.length > 0 && (
+            {filteredEntries.length === 0 && entries.length > 0 && (
               <div className="text-center py-16">
                 <div className="text-6xl mb-4">🔍</div>
                 <h3 className="text-xl font-semibold text-gray-300 mb-2">
@@ -293,7 +291,7 @@ export default function HabitsPage() {
             )}
 
             {/* First Time Empty State */}
-            {!isLoading && entries.length === 0 && (
+            {entries.length === 0 && (
               <div className="text-center py-20">
                 <div className="text-8xl mb-6">📔</div>
                 <h3 className="text-2xl font-bold text-gray-200 mb-3">
