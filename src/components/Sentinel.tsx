@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import PageNavigation from './EdgePills';
 
 interface SentinelProps {
-  context: "home" | "habits" | "learn";
+  context: "home" | "habits";
 }
 
 export default function Sentinel({ context }: SentinelProps) {

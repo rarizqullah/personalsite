@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 interface PageNavigationProps {
   show: boolean;
-  context: 'home' | 'habits' | 'learn';
+  context: 'home' | 'habits';
 }
 
 interface NavItem {
@@ -40,24 +40,6 @@ const navigationConfig: Record<PageNavigationProps['context'], NavConfig> = {
       label: 'Home', 
       icon: '←', 
       desc: 'Back to main',
-      color: '',
-      gradient: ''
-    },
-    next: { 
-      href: '/learn', 
-      label: 'Learn', 
-      icon: '→', 
-      desc: 'Notes & Learning',
-      color: '',
-      gradient: ''
-    },
-  },
-  learn: {
-    prev: { 
-      href: '/habits', 
-      label: 'Habits', 
-      icon: '←', 
-      desc: 'Art & Journaling',
       color: '',
       gradient: ''
     },
