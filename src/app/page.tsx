@@ -1,4 +1,5 @@
 import HeroWrapper from '@/components/HeroWrapper';
+import ProfileHeader from '@/components/ProfileHeader';
 import TechStackItem from '@/components/TechStackItem';
 import Footer from '@/components/Footer';
 import Sentinel from '@/components/Sentinel';
@@ -25,11 +26,18 @@ export default function Home() {
   return (
     <HeroWrapper>
       <main className="hero min-h-screen bg-[var(--bg)] text-[var(--text)]">
-        <div data-anim="title" className="group">
-          <h1 className="hero-title flex items-center gap-2">
-            Hello everyone <span className="hand-wave" aria-hidden="true">👋</span> my name is Rafi Risqullah Putra
-          </h1>
-        </div>
+        <ProfileHeader 
+          name="Rafi Risqullah Putra"
+          location="Indonesia"
+          avatar="/avatar-placeholder.svg"
+          isVerified={true}
+          socialLinks={{
+            discord: "#",
+            wordpress: "#",
+            twitter: "#",
+            linkedin: "#"
+          }}
+        />
         
         <div data-anim="subtitle">
           <div className="hero-paragraph">

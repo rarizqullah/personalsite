@@ -69,13 +69,21 @@ export default function Footer() {
           GitHub
         </a>
         <span aria-hidden="true" className="dot text-[color:var(--muted)] opacity-50">·</span>
-        <button
+        <span
+          role="button"
+          tabIndex={0}
           aria-label="Toggle theme"
-          className="text-[color:var(--muted)] hover:text-[color:var(--text)] cursor-pointer bg-transparent border-none p-0 font-inherit focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--brand)] transition-colors duration-200"
+          className="text-[color:var(--muted)] hover:underline cursor-pointer"
           onClick={handleThemeToggle}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleThemeToggle();
+            }
+          }}
         >
           Theme
-        </button>
+        </span>
       </nav>
     </footer>
   );
