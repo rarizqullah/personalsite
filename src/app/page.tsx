@@ -1,5 +1,6 @@
 import HeroWrapper from '@/components/HeroWrapper';
-import TechStackItem from '@/components/TechStackItem';
+import ProfileHeader from '@/components/ProfileHeader';
+import AdvancedTechCarousel from '@/components/AdvancedTechCarousel';
 import Footer from '@/components/Footer';
 import Sentinel from '@/components/Sentinel';
 
@@ -25,11 +26,18 @@ export default function Home() {
   return (
     <HeroWrapper>
       <main className="hero min-h-screen bg-[var(--bg)] text-[var(--text)]">
-        <div data-anim="title" className="group">
-          <h1 className="hero-title flex items-center gap-2">
-            Hello everyone <span className="hand-wave" aria-hidden="true">👋</span> my name is Rafi Risqullah Putra
-          </h1>
-        </div>
+        <ProfileHeader 
+          name="Rafi Risqullah Putra"
+          location="Indonesia"
+          avatar="/formal.svg"
+          isVerified={true}
+          socialLinks={{
+            discord: "#",
+            github: "https://github.com/rarizqullah",
+            twitter: "#",
+            linkedin: "https://www.linkedin.com/in/rafirisqullahputra"
+          }}
+        />
         
         <div data-anim="subtitle">
           <div className="hero-paragraph">
@@ -51,16 +59,13 @@ export default function Home() {
           </div>
         </div>
 
-        <ul className="tech-stack" data-anim="stack">
-          {techStack.map((tech, index) => (
-            <TechStackItem
-              key={tech.name}
-              name={tech.name}
-              logo={tech.logo}
-              index={index}
-            />
-          ))}
-        </ul>
+        <div data-anim="stack" className="hero-tech-section">
+          <AdvancedTechCarousel 
+            items={techStack}
+            speed={45}
+            pauseOnHover={true}
+          />
+        </div>
         
         <Sentinel context="home" />
         <Footer />
