@@ -50,25 +50,7 @@ export default function Footer() {
   return (
     <footer className="siteFooter bg-[color:var(--bg)] text-[color:var(--muted)] border-t border-[color:var(--border)]" aria-label="Footer">
       <p className="copyright">© {year} Rafi Risqullah Putra</p>
-      <nav className="social flex items-center gap-2 flex-wrap" aria-label="Social links">
-        <a
-          href="https://www.linkedin.com/in/rafirisqullahputra"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[color:var(--muted)] hover:underline"
-        >
-          LinkedIn
-        </a>
-        <span aria-hidden="true" className="dot text-[color:var(--muted)] opacity-50">·</span>
-        <a
-          href="https://github.com/rarizqullah"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[color:var(--muted)] hover:underline"
-        >
-          GitHub
-        </a>
-        <span aria-hidden="true" className="dot text-[color:var(--muted)] opacity-50">·</span>
+      <nav className="social flex items-center gap-3 flex-wrap" aria-label="Social links">
         <span
           role="button"
           tabIndex={0}

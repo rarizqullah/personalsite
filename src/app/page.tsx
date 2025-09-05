@@ -1,6 +1,6 @@
 import HeroWrapper from '@/components/HeroWrapper';
 import ProfileHeader from '@/components/ProfileHeader';
-import TechStackItem from '@/components/TechStackItem';
+import AdvancedTechCarousel from '@/components/AdvancedTechCarousel';
 import Footer from '@/components/Footer';
 import Sentinel from '@/components/Sentinel';
 
@@ -29,13 +29,13 @@ export default function Home() {
         <ProfileHeader 
           name="Rafi Risqullah Putra"
           location="Indonesia"
-          avatar="/avatar-placeholder.svg"
+          avatar="/formal.svg"
           isVerified={true}
           socialLinks={{
             discord: "#",
-            wordpress: "#",
+            github: "https://github.com/rarizqullah",
             twitter: "#",
-            linkedin: "#"
+            linkedin: "https://www.linkedin.com/in/rafirisqullahputra"
           }}
         />
         
@@ -59,16 +59,13 @@ export default function Home() {
           </div>
         </div>
 
-        <ul className="tech-stack" data-anim="stack">
-          {techStack.map((tech, index) => (
-            <TechStackItem
-              key={tech.name}
-              name={tech.name}
-              logo={tech.logo}
-              index={index}
-            />
-          ))}
-        </ul>
+        <div data-anim="stack" className="hero-tech-section">
+          <AdvancedTechCarousel 
+            items={techStack}
+            speed={45}
+            pauseOnHover={true}
+          />
+        </div>
         
         <Sentinel context="home" />
         <Footer />

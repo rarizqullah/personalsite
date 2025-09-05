@@ -5,24 +5,32 @@
 /* Import custom CSS files */
 @import url('../styles/habits.css');
 @import url('../styles/image-button.css');
+@import url('../styles/tech-carousel.css');
+@import url('../styles/advanced-carousel.css');
 
 /* CSS Variables untuk Dark Mode */
 :root {
   --bg: #FAF7F2;
+  --bg-rgb: 250, 247, 242;
   --surface: #FFFFFF;
+  --surface-rgb: 255, 255, 255;
   --text: #0B0F19;
   --muted: #64748B;
   --brand: #39363683;
+  --brand-rgb: 57, 54, 54;
   --accent: #e6e4e2;
   --border: #E5E7EB;
 }
 
 .dark {
   --bg: #0B0F19;
+  --bg-rgb: 11, 15, 25;
   --surface: #0F172A;
+  --surface-rgb: 15, 23, 42;
   --text: #E5E7EB;
   --muted: #94A3B8;
   --brand: #0f766d39;
+  --brand-rgb: 15, 118, 109;
   --accent: #d4b48351;
   --border: #1F2937;
 }
@@ -50,6 +58,7 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
   font-weight: 400;
   letter-spacing: -0.01em;
+  overflow-x: hidden;
 }
 
 /* Hide scrollbars for filmstrip */
@@ -173,8 +182,12 @@ html {
   color: #5865f2;
 }
 
-.social-link.wordpress:hover {
-  color: #21759b;
+.social-link.github:hover {
+  color: #333;
+}
+
+.dark .social-link.github:hover {
+  color: #f0f6fc;
 }
 
 .social-link.twitter:hover {
@@ -218,7 +231,15 @@ html {
 }
 
 .hero-paragraph:last-child {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Hero Tech Section - mengikuti container yang sama dengan paragraf */
+.hero-tech-section {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 /* Tech Stack dengan CSS variables */
@@ -355,6 +376,10 @@ html {
   .social-links {
     gap: 0.75rem;
     justify-content: center;
+  }
+
+  .hero-tech-section {
+    padding: 0 1.5rem;
   }
   
   .social-link {
