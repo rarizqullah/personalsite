@@ -5,6 +5,7 @@ import ExtensionErrorBoundary from '@/components/ExtensionErrorBoundary';
 import ExtensionProtection from '@/components/ExtensionProtection';
 import ThemeProvider from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
+import CookieConsent from '@/components/CookieConsent';
 import '@/utils/binanceExtensionFix'; // Import Binance extension fix
 
 const cormorant = Cormorant({
@@ -81,6 +82,7 @@ export default function RootLayout({
             {children}
           </ThemeProvider>
         </ExtensionErrorBoundary>
+        <CookieConsent />
       </body>
     </html>
   );

@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
+import Container from './Container';
 
 // components/Footer.tsx
 export default function Footer() {
-  const year = new Date().getFullYear(); // dibekukan saat build (SSG)
+  const year = new Date().getFullYear();
   
   useEffect(() => {
     // Ensure theme is applied after hydration
@@ -48,25 +50,41 @@ export default function Footer() {
   };
   
   return (
-    <footer className="siteFooter bg-[color:var(--bg)] text-[color:var(--muted)] border-t border-[color:var(--border)]" aria-label="Footer">
-      <p className="copyright">© {year} Rafi Risqullah Putra</p>
-      <nav className="social flex items-center gap-3 flex-wrap" aria-label="Social links">
-        <span
-          role="button"
-          tabIndex={0}
-          aria-label="Toggle theme"
-          className="text-[color:var(--muted)] hover:underline cursor-pointer"
-          onClick={handleThemeToggle}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              handleThemeToggle();
-            }
-          }}
-        >
-          Theme
-        </span>
-      </nav>
-    </footer>
+    <Container>
+      <footer className="siteFooter bg-[color:var(--bg)] text-[color:var(--muted)] border-t border-[color:var(--border)]" aria-label="Footer">
+        <p className="copyright">Copyright © {year} rafirisqullahputra. All Rights Reserved</p>
+        <nav className="social flex items-center gap-3 flex-wrap" aria-label="Social and legal links">
+          <span
+            role="button"
+            tabIndex={0}
+            aria-label="Toggle theme"
+            className="text-[color:var(--muted)] hover:underline cursor-pointer"
+            onClick={handleThemeToggle}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleThemeToggle();
+              }
+            }}
+          >
+            Theme
+          </span>
+          <span className="dot">•</span>
+          <Link 
+            href="/terms" 
+            className="text-[color:var(--muted)] hover:underline"
+          >
+            Terms of Service
+          </Link>
+          <span className="dot">•</span>
+          <Link 
+            href="/privacy" 
+            className="text-[color:var(--muted)] hover:underline"
+          >
+            Privacy Policy
+          </Link>
+        </nav>
+      </footer>
+    </Container>
   );
 }
