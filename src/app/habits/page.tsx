@@ -6,18 +6,29 @@ import Footer from '@/components/Footer';
 import Sentinel from '@/components/Sentinel';
 import JournalCard from '@/components/habits/journal-card-new';
 import { JournalEntry } from '@/types/journal';
+import { BlogPost, BlogCategory } from '@/types/blog';
 import SearchFilterBar, { SearchFilters } from '@/components/habits/search-filter-bar';
 import JournalForm from '@/components/habits/journal-form';
 import LearningProgress from '@/components/habits/learning-progress';
+import BlogList from '@/components/blog/BlogList';
+import BlogSidebar from '@/components/blog/BlogSidebar';
+import ScrollToTop from '@/components/blog/ScrollToTop';
+import BlogErrorBoundary from '@/components/blog/BlogErrorBoundary';
+import NavigationHeader from '@/components/habits/NavigationHeader';
+import { generateBlogListJsonLD, generateWebsiteJsonLD } from '@/utils/jsonLD';
 import { JOURNALS } from '@/data/habits';
 
-// Force static generation for optimal performance
+// Force static generation for optimal performance  
 export const dynamic = 'force-static';
 
 export default function HabitsPage() {
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingEntry, setEditingEntry] = useState<JournalEntry | null>(null);
+  const [activeTab, setActiveTab] = useState<'blog' | 'journal'>('blog');
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [blogCategories, setBlogCategories] = useState<BlogCategory[]>([]);
+  const [blogLoading, setBlogLoading] = useState(true);
   const [filters, setFilters] = useState<SearchFilters>({
     query: '',
     tags: [],
@@ -77,6 +88,29 @@ export default function HabitsPage() {
       localStorage.setItem('habits-journal-entries', JSON.stringify(entries));
     }
   }, [entries]);
+
+  // Fetch blog posts
+  useEffect(() => {
+    const fetchBlogPosts = async () => {
+      try {
+        setBlogLoading(true);
+        const response = await fetch('/api/blog');
+        if (response.ok) {
+          const data = await response.json();
+          setBlogPosts(data.posts || []);
+          setBlogCategories(data.categories || []);
+        } else {
+          console.warn('Failed to fetch blog posts:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching blog posts:', error);
+      } finally {
+        setBlogLoading(false);
+      }
+    };
+
+    fetchBlogPosts();
+  }, []);
 
   const calculateReadingTime = (blocks: { type: string; content: string }[]): number => {
     if (!blocks || blocks.length === 0) return 1;
@@ -211,106 +245,155 @@ export default function HabitsPage() {
   // Calculate statistics for display
   const stats = calculateStats(entries);
 
+  // Generate JSON-LD for SEO
+  const blogJsonLD = useMemo(() => {
+    if (blogPosts.length > 0) {
+      return generateBlogListJsonLD(blogPosts);
+    }
+    return null;
+  }, [blogPosts]);
+
+  const websiteJsonLD = useMemo(() => generateWebsiteJsonLD(), []);
+
   return (
-    <HeroWrapper>
+    <>
+      {/* JSON-LD Structured Data */}
+      {blogJsonLD && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLD) }}
+        />
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLD) }}
+      />
+      
+      <HeroWrapper>
+      
       <main className="hero min-h-screen bg-[var(--bg)] text-[var(--text)]">
-        <div className="habits-hero-section">
-          <div className="habits-hero-content">
-            <h1 className="habits-hero-title">
-              <button 
-                onClick={handleNewEntry}
-                className="habits-title-button"
-                aria-label="Create new entry"
-              >
-                Journaling
-              </button>
-            </h1>
-            <p className="habits-hero-subtitle">
-              Track your daily habits and create meaningful entries to document your growth journey
-            </p>
+        <div data-anim="subtitle">
+          <div className="hero-paragraph">
+            <div className="habits-intro-section">
+              <p className="habits-page-subtitle">
+                Jelajahi artikel terkini dari dunia teknologi dan dokumentasikan perjalanan belajar Anda. Setiap langkah dalam perjalanan pengembangan diri adalah investasi berharga untuk masa depan yang lebih baik.
+              </p>
+            </div>
           </div>
         </div>
 
+        {/* Navigation Header */}
+        <NavigationHeader 
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onNewEntry={handleNewEntry}
+        />
+
         {/* Main Content */}
-        <section className="w-full pb-32">
-          <div className="max-w-[800px] mx-auto px-8">
-            
-            {/* Learning Progress */}
-            <LearningProgress
-              totalEntries={stats.total}
-              entriesThisWeek={stats.thisWeek}
-              entriesThisMonth={stats.thisMonth}
-            />
-            
-            {/* Search & Filter Bar */}
-            <SearchFilterBar
-              filters={filters}
-              onFiltersChange={setFilters}
-              availableTags={availableTags}
-              totalResults={filteredEntries.length}
-            />
+        <div className="habits-main-content">
 
-            {/* Journal Cards Grid */}
-            <div className="journal-cards-grid">
-              {filteredEntries.map((entry, index) => (
-                <JournalCard
-                  key={entry.id}
-                  entry={entry}
-                  canEdit={true}
-                  canDelete={true}
-                  onEdit={handleEditEntry}
-                  onDelete={handleDeleteEntry}
-                  onBookmark={handleBookmarkEntry}
-                  index={index}
+          {/* Blog Content */}
+          {activeTab === 'blog' && (
+            <BlogErrorBoundary>
+              <div className="blog-layout">
+                <div className="blog-main">
+                  <header className="blog-header">
+                    <h2 className="blog-section-title">Artikel & Inspirasi Terkini</h2>
+                    <p className="blog-section-subtitle">
+                      Kumpulan artikel pilihan dari berbagai sumber terpercaya untuk pengembang
+                    </p>
+                  </header>
+
+                  <BlogList posts={blogPosts} loading={blogLoading} />
+                </div>
+
+                <BlogSidebar 
+                  recentPosts={blogPosts.slice(0, 5)}
+                  categories={blogCategories}
                 />
-              ))}
+              </div>
+            </BlogErrorBoundary>
+          )}
+
+          {/* Journal Content */}
+          {activeTab === 'journal' && (
+            <div className="journal-container max-w-[800px] mx-auto px-8">
+              {/* Learning Progress */}
+              <LearningProgress
+                totalEntries={stats.total}
+                entriesThisWeek={stats.thisWeek}
+                entriesThisMonth={stats.thisMonth}
+              />
+              
+              {/* Search & Filter Bar */}
+              <SearchFilterBar
+                filters={filters}
+                onFiltersChange={setFilters}
+                availableTags={availableTags}
+                totalResults={filteredEntries.length}
+              />
+
+              {/* Journal Cards Grid */}
+              <div className="journal-cards-grid">
+                {filteredEntries.map((entry, index) => (
+                  <JournalCard
+                    key={entry.id}
+                    entry={entry}
+                    canEdit={true}
+                    canDelete={true}
+                    onEdit={handleEditEntry}
+                    onDelete={handleDeleteEntry}
+                    onBookmark={handleBookmarkEntry}
+                    index={index}
+                  />
+                ))}
+              </div>
+
+              {/* Empty State */}
+              {filteredEntries.length === 0 && entries.length > 0 && (
+                <div className="text-center py-16">
+                  <div className="text-6xl mb-4">🔍</div>
+                  <h3 className="text-xl font-semibold text-gray-300 mb-2">
+                    No entries found
+                  </h3>
+                  <p className="text-gray-500 mb-6">
+                    Try adjusting your search or filter criteria
+                  </p>
+                  <button
+                    onClick={() => setFilters({
+                      query: '',
+                      tags: [],
+                      sortBy: 'date',
+                      sortOrder: 'desc'
+                    })}
+                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              )}
+
+              {/* First Time Empty State */}
+              {entries.length === 0 && (
+                <div className="text-center py-20">
+                  <div className="text-8xl mb-6">📔</div>
+                  <h3 className="text-2xl font-bold text-gray-200 mb-3">
+                    Start Your Learning Journal
+                  </h3>
+                  <p className="text-gray-400 mb-8 max-w-md mx-auto">
+                    Document your learning experiences, code snippets, and insights. 
+                    Build a personal knowledge base that grows with you.
+                  </p>
+                  <button
+                    onClick={handleNewEntry}
+                    className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all transform hover:scale-105"
+                  >
+                    Create Your First Entry
+                  </button>
+                </div>
+              )}
             </div>
-
-            {/* Empty State */}
-            {filteredEntries.length === 0 && entries.length > 0 && (
-              <div className="text-center py-16">
-                <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold text-gray-300 mb-2">
-                  No entries found
-                </h3>
-                <p className="text-gray-500 mb-6">
-                  Try adjusting your search or filter criteria
-                </p>
-                <button
-                  onClick={() => setFilters({
-                    query: '',
-                    tags: [],
-                    sortBy: 'date',
-                    sortOrder: 'desc'
-                  })}
-                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                >
-                  Clear Filters
-                </button>
-              </div>
-            )}
-
-            {/* First Time Empty State */}
-            {entries.length === 0 && (
-              <div className="text-center py-20">
-                <div className="text-8xl mb-6">📔</div>
-                <h3 className="text-2xl font-bold text-gray-200 mb-3">
-                  Start Your Learning Journal
-                </h3>
-                <p className="text-gray-400 mb-8 max-w-md mx-auto">
-                  Document your learning experiences, code snippets, and insights. 
-                  Build a personal knowledge base that grows with you.
-                </p>
-                <button
-                  onClick={handleNewEntry}
-                  className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl font-semibold transition-all transform hover:scale-105"
-                >
-                  Create Your First Entry
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
+          )}
 
         {/* Journal Form Modal */}
         {showForm && (
@@ -324,9 +407,17 @@ export default function HabitsPage() {
           />
         )}
         
+        </div>
+        
+        <ScrollToTop />
         <Sentinel context="habits" />
-        <Footer />
+        
+        {/* Footer Section */}
+        <div className="mt-16 mb-8">
+          <Footer />
+        </div>
       </main>
-    </HeroWrapper>
+      </HeroWrapper>
+    </>
   );
 }

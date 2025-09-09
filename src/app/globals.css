@@ -4,6 +4,7 @@
 
 /* Import custom CSS files */
 @import url('../styles/habits.css');
+@import url('../styles/blog.css');
 @import url('../styles/image-button.css');
 @import url('../styles/tech-carousel.css');
 @import url('../styles/advanced-carousel.css');
@@ -128,6 +129,7 @@ html {
 }
 
 .profile-name {
+  font-family: 'Cormorant', serif;
   font-size: 1.75rem;
   font-weight: 600;
   color: var(--text);
@@ -159,7 +161,7 @@ html {
 
 .social-links {
   display: flex;
-  gap: 0.75rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
@@ -167,15 +169,18 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 36px;
+  height: 36px;
   color: var(--muted);
   transition: all 0.2s ease;
   text-decoration: none;
+  border-radius: 8px;
 }
 
 .social-link:hover {
-  transform: translateY(-1px);
+  transform: translateY(-1px) scale(1.1);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
 }
 
 .social-link.discord:hover {
@@ -199,8 +204,8 @@ html {
 }
 
 .social-link svg {
-  width: 18px;
-  height: 18px;
+  width: 26px;
+  height: 26px;
 }
 
 .hero-title {
@@ -221,17 +226,30 @@ html {
   font-weight: 300;
   margin-bottom: 2rem;
   color: var(--muted);
-  max-width: 600px;
+  max-width: 100%;
   line-height: 1.7;
   text-align: justify;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .hero-paragraph {
   margin-bottom: 1.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .hero-paragraph:last-child {
   margin-bottom: 1.5rem;
+}
+
+/* Hero subtitle section - mengikuti container yang sama dengan tech section */
+div[data-anim="subtitle"] {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 /* Hero Tech Section - mengikuti container yang sama dengan paragraf */
@@ -375,7 +393,7 @@ html {
   }
   
   .social-links {
-    gap: 0.75rem;
+    gap: 1.25rem;
     justify-content: center;
   }
 
@@ -384,13 +402,14 @@ html {
   }
   
   .social-link {
-    width: 28px;
-    height: 28px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
   }
   
   .social-link svg {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
   }
   
   .verification-badge {

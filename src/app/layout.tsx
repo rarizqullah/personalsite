@@ -35,6 +35,13 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta httpEquiv="Content-Security-Policy" 
               content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com https://fonts.gstatic.com; object-src 'none'; base-uri 'self';" />
+        {/* Preconnect for external RSS feeds */}
+        <link rel="preconnect" href="https://dev.to" />
+        <link rel="dns-prefetch" href="https://dev.to" />
+        <link rel="preconnect" href="https://css-tricks.com" />
+        <link rel="dns-prefetch" href="https://css-tricks.com" />
+        <link rel="preconnect" href="https://blog.logrocket.com" />
+        <link rel="dns-prefetch" href="https://blog.logrocket.com" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
