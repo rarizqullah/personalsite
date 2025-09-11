@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
 jobs:
   # Job 1: Code Quality & Testing
   quality:
@@ -22,7 +27,7 @@ jobs:
         bun-version: latest
         
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.bun/install/cache
         key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
@@ -42,7 +47,7 @@ jobs:
       run: bun run build
       
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-files
         path: |
@@ -54,6 +59,9 @@ jobs:
   security:
     name: Security Scan
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
     
     steps:
     - name: Checkout code
@@ -68,79 +76,32 @@ jobs:
         output: 'trivy-results.sarif'
         
     - name: Upload Trivy scan results
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       if: always()
       with:
         sarif_file: 'trivy-results.sarif'
 
-  # Job 3: Deploy Preview (for PRs)
-  deploy-preview:
-    name: Deploy Preview
-    runs-on: ubuntu-latest
-    needs: [quality]
-    if: github.event_name == 'pull_request'
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
-      with:
-        bun-version: latest
-        
-    - name: Install dependencies
-      run: bun install --frozen-lockfile
-      
-    - name: Build for preview
-      run: bun run build
-      
-    - name: Deploy to Vercel Preview
-      uses: vercel/action@v1
-      with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        
-  # Job 4: Deploy Production (main branch only)
-  deploy-production:
-    name: Deploy Production  
+  # Job 3: Build and Test Complete
+  build-complete:
+    name: Build Complete
     runs-on: ubuntu-latest
     needs: [quality, security]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: always()
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
-      with:
-        bun-version: latest
+    - name: Check results
+      run: |
+        echo "Quality check: ${{ needs.quality.result }}"
+        echo "Security check: ${{ needs.security.result }}"
         
-    - name: Install dependencies
-      run: bun install --frozen-lockfile
-      
-    - name: Build for production
-      run: bun run build
-      
-    - name: Deploy to Vercel Production
-      uses: vercel/action@v1
-      with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        vercel-args: '--prod'
+        if [[ "${{ needs.quality.result }}" != "success" ]]; then
+          echo "❌ Quality checks failed"
+          exit 1
+        fi
         
-    - name: Create deployment notification
-      uses: 8398a7/action-slack@v3
-      if: always()
-      with:
-        status: ${{ job.status }}
-        webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-        text: |
-          🚀 Production deployment ${{ job.status }}!
-          Commit: ${{ github.sha }}
-          Author: ${{ github.actor }}
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        if [[ "${{ needs.security.result }}" != "success" && "${{ needs.security.result }}" != "skipped" ]]; then
+          echo "❌ Security checks failed"
+          exit 1
+        fi
+        
+        echo "✅ All checks passed! Ready for deployment."
