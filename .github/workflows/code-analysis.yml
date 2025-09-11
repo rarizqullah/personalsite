@@ -1,0 +1,142 @@
+name: Code Analysis
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+
+jobs:
+  # Code Quality Analysis
+  codeql:
+    name: CodeQL Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      
+    strategy:
+      matrix:
+        language: [ 'javascript', 'typescript' ]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+        
+    - name: Install dependencies
+      run: bun install --frozen-lockfile
+      
+    - name: Build application
+      run: bun run build
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+
+  # Bundle Size Analysis
+  bundle-analysis:
+    name: Bundle Size Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+        
+    - name: Install dependencies
+      run: bun install --frozen-lockfile
+      
+    - name: Build and analyze bundle
+      run: |
+        bun run build
+        npx next-bundle-analyzer
+        
+    - name: Comment bundle size
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const path = '.next/analyze/bundle-sizes.json';
+          
+          if (fs.existsSync(path)) {
+            const bundleData = JSON.parse(fs.readFileSync(path, 'utf8'));
+            const comment = `
+            ## 📦 Bundle Size Analysis
+            
+            | Route | Size | First Load JS |
+            |-------|------|--------------|
+            ${bundleData.pages.map(page => 
+              `| ${page.route} | ${page.size} | ${page.firstLoadJS} |`
+            ).join('\n')}
+            
+            Total bundle size: ${bundleData.totalSize}
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+          }
+
+  # Lighthouse Performance Analysis  
+  lighthouse:
+    name: Lighthouse Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+        
+    - name: Install dependencies
+      run: bun install --frozen-lockfile
+      
+    - name: Build application
+      run: bun run build
+      
+    - name: Start application
+      run: bun run start &
+      
+    - name: Wait for server
+      run: |
+        timeout 60s bash -c 'until curl -s http://localhost:3000; do sleep 1; done'
+        
+    - name: Run Lighthouse CI
+      uses: treosh/lighthouse-ci-action@v10
+      with:
+        configPath: './lighthouse-ci.json'
+        uploadArtifacts: true
+        temporaryPublicStorage: true
+        
+    - name: Comment Lighthouse results
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          const resultsPath = '.lighthouseci/lhr-*.json';
+          
+          // Read Lighthouse results and comment on PR
+          // Implementation depends on specific needs
