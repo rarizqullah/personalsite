@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 /* Import custom CSS files */
-@import url('../styles/habits.css');
-@import url('../styles/blog.css');
-@import url('../styles/image-button.css');
-@import url('../styles/tech-carousel.css');
-@import url('../styles/advanced-carousel.css');
+@import url('../styles/features/habits.css');
+@import url('../styles/features/blog.css');
+@import url('../styles/components/image-button.css');
+@import url('../styles/components/tech-carousel.css');
+@import url('../styles/components/advanced-carousel.css');
 
 /* CSS Variables untuk Dark Mode */
 :root {

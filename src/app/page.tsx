@@ -8,18 +8,18 @@ import Sentinel from '@ui/Sentinel';
 export const dynamic = 'force-static';
 
 const techStack = [
-  { name: 'Next.js', logo: '/next.svg' },
-  { name: 'TypeScript', logo: '/typescript.svg' },
-  { name: 'React', logo: '/react.svg' },
-  { name: 'Node.js', logo: '/nodejs.svg' },
-  { name: 'GraphQL', logo: '/graphql.svg' },
-  { name: 'PostgreSQL', logo: '/postgresql.svg' },
-  { name: 'Event-Driven Architecture', logo: '/event-driven.svg' },
-  { name: 'System Integration', logo: '/system-integration.svg' },
-  { name: 'CI/CD', logo: '/cicd.svg' },
-  { name: 'Infrastructure as Code', logo: '/infrastructure.svg' },
-  { name: 'Observability', logo: '/observability.svg' },
-  { name: 'WebAssembly', logo: '/webassembly.svg' }
+  { name: 'Next.js', logo: '/icons/next.svg' },
+  { name: 'TypeScript', logo: '/icons/typescript.svg' },
+  { name: 'React', logo: '/icons/react.svg' },
+  { name: 'Node.js', logo: '/icons/nodejs.svg' },
+  { name: 'GraphQL', logo: '/icons/graphql.svg' },
+  { name: 'PostgreSQL', logo: '/icons/postgresql.svg' },
+  { name: 'Event-Driven Architecture', logo: '/icons/event-driven.svg' },
+  { name: 'System Integration', logo: '/icons/system-integration.svg' },
+  { name: 'CI/CD', logo: '/icons/cicd.svg' },
+  { name: 'Infrastructure as Code', logo: '/icons/infrastructure.svg' },
+  { name: 'Observability', logo: '/icons/observability.svg' },
+  { name: 'WebAssembly', logo: '/icons/webassembly.svg' }
 ];
 
 export default function Home() {
@@ -29,7 +29,7 @@ export default function Home() {
         <ProfileHeader 
           name="Rafi Risqullah Putra"
           location="Indonesia"
-          avatar="/formal.svg"
+          avatar="/icons/formal.svg"
           isVerified={true}
           socialLinks={{
             discord: "#",

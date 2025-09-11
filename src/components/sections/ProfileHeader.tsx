@@ -40,7 +40,7 @@ export default function ProfileHeader({
           {isVerified && (
             <div className="verification-badge">
               <Image
-                src="/verifikasi.svg"
+                src="/icons/verifikasi.svg"
                 alt="Verified badge"
                 width={25}
                 height={25}
