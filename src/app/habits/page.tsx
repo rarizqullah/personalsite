@@ -1,21 +1,21 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import HeroWrapper from '@/components/HeroWrapper';
-import Footer from '@/components/Footer';
-import Sentinel from '@/components/Sentinel';
-import JournalCard from '@/components/habits/journal-card-new';
+import HeroWrapper from '@sections/HeroWrapper';
+import Footer from '@sections/Footer';
+import Sentinel from '@ui/Sentinel';
+import JournalCard from '@features/habits/journal-card-new';
 import { JournalEntry } from '@/types/journal';
 import { BlogPost, BlogCategory } from '@/types/blog';
-import SearchFilterBar, { SearchFilters } from '@/components/habits/search-filter-bar';
-import JournalForm from '@/components/habits/journal-form';
-import LearningProgress from '@/components/habits/learning-progress';
-import BlogList from '@/components/blog/BlogList';
-import BlogSidebar from '@/components/blog/BlogSidebar';
-import ScrollToTop from '@/components/blog/ScrollToTop';
-import BlogErrorBoundary from '@/components/blog/BlogErrorBoundary';
-import NavigationHeader from '@/components/habits/NavigationHeader';
-import { generateBlogListJsonLD, generateWebsiteJsonLD } from '@/utils/jsonLD';
+import SearchFilterBar, { SearchFilters } from '@features/habits/search-filter-bar';
+import JournalForm from '@features/habits/journal-form';
+import LearningProgress from '@features/habits/learning-progress';
+import BlogList from '@features/blog/BlogList';
+import BlogSidebar from '@features/blog/BlogSidebar';
+import ScrollToTop from '@features/blog/ScrollToTop';
+import BlogErrorBoundary from '@features/blog/BlogErrorBoundary';
+import NavigationHeader from '@features/habits/NavigationHeader';
+import { generateBlogListJsonLD, generateWebsiteJsonLD } from '@/lib/jsonLD';
 import { JOURNALS } from '@/data/habits';
 
 // Force static generation for optimal performance  

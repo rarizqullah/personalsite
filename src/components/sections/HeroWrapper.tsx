@@ -2,7 +2,7 @@
 
 import nextDynamic from 'next/dynamic';
 
-const HeroMotionClient = nextDynamic(() => import('./HeroMotionClient'), {
+const HeroMotionClient = nextDynamic(() => import('@sections/HeroMotionClient'), {
   ssr: false,
 });
 

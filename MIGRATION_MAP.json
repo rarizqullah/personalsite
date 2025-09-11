@@ -1,0 +1,207 @@
+[
+  {
+    "phase": "1-utils-rename",
+    "from": "src/utils/binanceExtensionFix.ts",
+    "to": "src/lib/binanceExtensionFix.ts"
+  },
+  {
+    "phase": "1-utils-rename", 
+    "from": "src/utils/blockUtils.ts",
+    "to": "src/lib/blockUtils.ts"
+  },
+  {
+    "phase": "1-utils-rename",
+    "from": "src/utils/extensionGuard.ts", 
+    "to": "src/lib/extensionGuard.ts"
+  },
+  {
+    "phase": "1-utils-rename",
+    "from": "src/utils/jsonLD.ts",
+    "to": "src/lib/jsonLD.ts"
+  },
+  {
+    "phase": "1-utils-rename",
+    "from": "src/utils/rssParser.ts",
+    "to": "src/lib/rssParser.ts"
+  },
+  {
+    "phase": "2-components-ui",
+    "from": "src/components/Container.tsx",
+    "to": "src/components/ui/Container.tsx"
+  },
+  {
+    "phase": "2-components-ui",
+    "from": "src/components/ImageButton.tsx", 
+    "to": "src/components/ui/ImageButton.tsx"
+  },
+  {
+    "phase": "2-components-ui",
+    "from": "src/components/ThemeToggle.tsx",
+    "to": "src/components/ui/ThemeToggle.tsx"
+  },
+  {
+    "phase": "2-components-ui",
+    "from": "src/components/Sentinel.tsx",
+    "to": "src/components/ui/Sentinel.tsx"
+  },
+  {
+    "phase": "2-components-ui",
+    "from": "src/components/ExtensionErrorBoundary.tsx",
+    "to": "src/components/ui/ExtensionErrorBoundary.tsx"
+  },
+  {
+    "phase": "2-components-ui",
+    "from": "src/components/ExtensionProtection.tsx", 
+    "to": "src/components/ui/ExtensionProtection.tsx"
+  },
+  {
+    "phase": "3-components-sections",
+    "from": "src/components/ProfileHeader.tsx",
+    "to": "src/components/sections/ProfileHeader.tsx"
+  },
+  {
+    "phase": "3-components-sections", 
+    "from": "src/components/Footer.tsx",
+    "to": "src/components/sections/Footer.tsx"
+  },
+  {
+    "phase": "3-components-sections",
+    "from": "src/components/HeroMotionClient.tsx",
+    "to": "src/components/sections/HeroMotionClient.tsx"
+  },
+  {
+    "phase": "3-components-sections",
+    "from": "src/components/HeroWrapper.tsx", 
+    "to": "src/components/sections/HeroWrapper.tsx"
+  },
+  {
+    "phase": "4-components-composite",
+    "from": "src/components/AdvancedTechCarousel.tsx",
+    "to": "src/components/composite/AdvancedTechCarousel.tsx"
+  },
+  {
+    "phase": "4-components-composite",
+    "from": "src/components/CookieConsent.tsx",
+    "to": "src/components/composite/CookieConsent.tsx"
+  },
+  {
+    "phase": "4-components-composite",
+    "from": "src/components/EdgePills.tsx",
+    "to": "src/components/composite/EdgePills.tsx"
+  },
+  {
+    "phase": "4-components-composite",
+    "from": "src/components/ThemeProvider.tsx",
+    "to": "src/components/composite/ThemeProvider.tsx"
+  },
+  {
+    "phase": "5-components-features",
+    "from": "src/components/blog/",
+    "to": "src/components/features/blog/"
+  },
+  {
+    "phase": "5-components-features", 
+    "from": "src/components/habits/",
+    "to": "src/components/features/habits/"
+  },
+  {
+    "phase": "6-styles-organization",
+    "from": "src/styles/advanced-carousel-clean.css",
+    "to": "src/styles/components/advanced-carousel-clean.module.css"
+  },
+  {
+    "phase": "6-styles-organization", 
+    "from": "src/styles/advanced-carousel.css",
+    "to": "src/styles/components/advanced-carousel.module.css"
+  },
+  {
+    "phase": "6-styles-organization",
+    "from": "src/styles/blog.css", 
+    "to": "src/styles/features/blog.css"
+  },
+  {
+    "phase": "6-styles-organization",
+    "from": "src/styles/habits.css",
+    "to": "src/styles/features/habits.css"
+  },
+  {
+    "phase": "6-styles-organization",
+    "from": "src/styles/image-button.css",
+    "to": "src/styles/components/image-button.module.css"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/cicd.svg",
+    "to": "public/icons/cicd.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/event-driven.svg", 
+    "to": "public/icons/event-driven.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/formal.svg",
+    "to": "public/icons/formal.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/graphql.svg",
+    "to": "public/icons/graphql.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/infrastructure.svg",
+    "to": "public/icons/infrastructure.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/next.svg",
+    "to": "public/icons/next.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/nodejs.svg",
+    "to": "public/icons/nodejs.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/observability.svg",
+    "to": "public/icons/observability.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/postgresql.svg", 
+    "to": "public/icons/postgresql.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/react.svg",
+    "to": "public/icons/react.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/system-integration.svg",
+    "to": "public/icons/system-integration.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/typescript.svg",
+    "to": "public/icons/typescript.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/verifikasi.svg",
+    "to": "public/icons/verifikasi.svg"
+  },
+  {
+    "phase": "7-public-organization", 
+    "from": "public/webassembly.svg",
+    "to": "public/icons/webassembly.svg"
+  },
+  {
+    "phase": "7-public-organization",
+    "from": "public/avatar-placeholder.svg",
+    "to": "public/images/avatar-placeholder.svg"
+  }
+]

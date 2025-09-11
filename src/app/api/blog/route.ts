@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { fetchRSSFeeds, getBlogCategories, filterPostsByCategory } from '@/utils/rssParser';
+import { fetchRSSFeeds, getBlogCategories, filterPostsByCategory } from '@/lib/rssParser';
 
 export const revalidate = 600; // 10 minutes
 

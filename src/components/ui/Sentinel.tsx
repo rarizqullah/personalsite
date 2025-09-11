@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import PageNavigation from './EdgePills';
+import PageNavigation from '@composite/EdgePills';
 
 interface SentinelProps {
   context: "home" | "habits";

@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { fetchRSSFeeds } from '@/utils/rssParser';
+import { fetchRSSFeeds } from '@/lib/rssParser';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rarizqullah.vercel.app';

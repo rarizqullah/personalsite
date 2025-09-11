@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { JournalEntry, JournalBlock } from '@/types/journal'
-import { createParagraphBlock } from '@/utils/blockUtils'
+import { createParagraphBlock } from '@/lib/blockUtils'
 import BlockEditor from './BlockEditor'
 
 interface JournalFormProps {

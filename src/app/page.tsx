@@ -1,8 +1,8 @@
-import HeroWrapper from '@/components/HeroWrapper';
-import ProfileHeader from '@/components/ProfileHeader';
-import AdvancedTechCarousel from '@/components/AdvancedTechCarousel';
-import Footer from '@/components/Footer';
-import Sentinel from '@/components/Sentinel';
+import HeroWrapper from '@sections/HeroWrapper';
+import ProfileHeader from '@sections/ProfileHeader';
+import AdvancedTechCarousel from '@composite/AdvancedTechCarousel';
+import Footer from '@sections/Footer';
+import Sentinel from '@ui/Sentinel';
 
 // Force static generation for optimal performance
 export const dynamic = 'force-static';

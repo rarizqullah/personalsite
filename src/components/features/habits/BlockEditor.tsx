@@ -10,7 +10,7 @@ import {
   moveBlock, 
   convertBlockType,
   updateBlock 
-} from '@/utils/blockUtils';
+} from '@/lib/blockUtils';
 
 interface BlockEditorProps {
   blocks: JournalBlock[];

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Container from "@/components/Container";
+import Container from "@ui/Container";
 
 export const metadata: Metadata = {
   title: "Privacy Policy - Rafi Risqullah Putra",

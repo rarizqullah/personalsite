@@ -1,6 +1,6 @@
 'use client';
 
-import Container from "@/components/Container";
+import Container from "@ui/Container";
 
 export default function CookieTest() {
   const resetCookie = () => {

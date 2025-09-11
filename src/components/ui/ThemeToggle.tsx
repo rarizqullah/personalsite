@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ImageButton from './ImageButton';
+import ImageButton from '@ui/ImageButton';
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState<string | null>(null);

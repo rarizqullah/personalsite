@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Cormorant } from "next/font/google";
 import "./globals.css";
-import ExtensionErrorBoundary from '@/components/ExtensionErrorBoundary';
-import ExtensionProtection from '@/components/ExtensionProtection';
-import ThemeProvider from '@/components/ThemeProvider';
-import ThemeToggle from '@/components/ThemeToggle';
-import CookieConsent from '@/components/CookieConsent';
-import '@/utils/binanceExtensionFix'; // Import Binance extension fix
+import ExtensionErrorBoundary from '@ui/ExtensionErrorBoundary';
+import ExtensionProtection from '@ui/ExtensionProtection';
+import ThemeProvider from '@composite/ThemeProvider';
+import ThemeToggle from '@ui/ThemeToggle';
+import CookieConsent from '@composite/CookieConsent';
+import '@/lib/binanceExtensionFix'; // Import Binance extension fix
 
 const cormorant = Cormorant({
   subsets: ['latin'],
