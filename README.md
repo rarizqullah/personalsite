@@ -1,10 +1,10 @@
-# Personal Website - Performance-First Hero Page
+# Personal Website - Performance-First 
 
-## 📋 Overview
+## Overview
 
 A high-performance personal website built with Next.js (App Router) featuring a single hero section. This project follows strict performance requirements as outlined in the PRD to achieve exceptional Core Web Vitals scores.
 
-## 🎯 Key Features
+## Key Features
 
 - **Static Generation (SSG)**: Entire site is pre-rendered for optimal performance
 - **Performance-First**: Built to achieve Lighthouse Performance score ≥95
@@ -13,7 +13,7 @@ A high-performance personal website built with Next.js (App Router) featuring a 
 - **Accessibility**: Semantic HTML, proper contrast ratios, keyboard navigation
 - **SEO Optimized**: Proper meta tags and Open Graph support
 
-## 📊 Performance Targets
+## Performance Targets
 
 - **LCP**: ≤ 1.5s (Mobile 4G, CPU Throttle x4)
 - **CLS**: ≤ 0.01
@@ -22,7 +22,7 @@ A high-performance personal website built with Next.js (App Router) featuring a 
 - **JavaScript Bundle**: ≤ 60kB gzipped
 - **Total Transfer**: ≤ 200kB gzipped
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
@@ -31,7 +31,7 @@ A high-performance personal website built with Next.js (App Router) featuring a 
 - **Fonts**: Cormorant via Google Fonts
 - **Deployment**: Optimized for Vercel
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -44,7 +44,7 @@ src/
     globals.css           # Minimal global styles
 ```
 
-## ⚡ Performance Architecture
+## Performance Architecture
 
 - **Server Components**: Layout and page render statically
 - **Client Components**: Only animation logic runs on client
@@ -52,7 +52,7 @@ src/
 - **Dynamic Imports**: Animation code loaded separately with `ssr: false`
 - **Font Optimization**: Google Fonts with preconnect and display=swap
 
-## 🚀 Getting Started
+## Getting Started
 
 1. **Install dependencies:**
    ```bash
@@ -74,51 +74,51 @@ src/
    npm start
    ```
 
-## 📝 Content
+## Content
 
 - **Name**: Riza Rizqullah
 - **Role**: Frontend / Full-stack Developer
 - **Description**: Focused on modern web application development with cutting-edge technologies
 - **Tech Stack**: Next.js, TypeScript, React, Node.js, PostgreSQL, MongoDB, TailwindCSS, Framer Motion, Vercel, Git, Docker, AWS
 
-## ✅ Acceptance Criteria
+## Acceptance Criteria
 
-- [x] Static rendering (`export const dynamic = 'force-static'`)
-- [x] Google Fonts loaded with exact specified link tags
-- [x] Semantic HTML structure (h1, p, ul/li)
-- [x] Animations respect `prefers-reduced-motion`
-- [x] Lighthouse Performance ≥95 target
-- [x] Client JS bundle ≤60kB gzipped
-- [x] No dependencies beyond Next.js/React/Framer Motion
+-  Static rendering (`export const dynamic = 'force-static'`)
+-  Google Fonts loaded with exact specified link tags
+-  Semantic HTML structure (h1, p, ul/li)
+-  Animations respect `prefers-reduced-motion`
+-  Lighthouse Performance ≥95 target
+-  Client JS bundle ≤60kB gzipped
+-  No dependencies beyond Next.js/React/Framer Motion
 
-## 📱 Responsive Breakpoints
+## Responsive Breakpoints
 
 - **Mobile**: 320px - 767px
 - **Tablet**: 768px - 1023px  
 - **Desktop**: 1024px+
 
-## 🎨 Design Principles
+## Design Principles
 
 - **Single-screen focus**: All content visible within 1-1.5 viewports
 - **Clean typography**: Cormorant font with proper fallbacks
 - **Minimal animations**: Subtle fade-in and slide effects
 - **No distractions**: Focus purely on content presentation
 
-## 🔧 Development Commands
+## Development Commands
 
 - `npm run dev` - Start development server with Turbopack
 - `npm run build` - Create production build
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
 
-## 📈 Monitoring
+## Monitoring
 
 The site is optimized for monitoring with Web Vitals. Performance metrics can be tracked through:
 - Chrome DevTools
 - Lighthouse CI
 - Vercel Analytics (if deployed)
 
-## 🌐 Deployment
+## Deployment
 
 Optimized for Vercel deployment with automatic static optimization and edge caching.
 
